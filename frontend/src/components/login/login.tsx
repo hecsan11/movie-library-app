@@ -1,32 +1,14 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
-/*
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
-
- */
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
-import {
-  createTheme,
-  ThemeProvider,
-  styled,
-  PaletteMode,
-} from '@mui/material/styles';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { styled } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
 import { FormControl } from '@mui/material';
-/* import getSignUpTheme from './theme/getSignUpTheme';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
-import TemplateFrame from './TemplateFrame'; */
 
 type Inputs = {
     user: string
@@ -69,10 +51,8 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // () => checkLogin(form)
   return (
     <form onSubmit={handleSubmit((data) => {
-        console.log(data);
         navigate('/home');
     })}>
         <SignInContainer direction="column" justifyContent="space-between">
@@ -124,7 +104,6 @@ const Login = () => {
                         {errors.user && <span>User is required</span>}
                         {errors.password && <span>Password is required</span>}
                     </Box>
-                    {/* disabled={!form.user || !form.password} */}
                     <Button fullWidth variant="contained" type="submit">Enter</Button>
                 </Card>
             </Stack>
