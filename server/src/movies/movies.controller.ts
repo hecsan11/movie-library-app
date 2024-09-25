@@ -13,8 +13,11 @@ export class MoviesController {
   }
 
   @Get('/toprated')
-  async findAll(): Promise<Movie[]> {
-    return this.moviesService.findAll();
+  async findAll(
+    @Query('page') page: number,
+    @Query('genres') genres: string,
+  ): Promise<Movie[]> {
+    return this.moviesService.findAll(page, genres);
   }
 
   @Get('/upcoming')
@@ -28,8 +31,11 @@ export class MoviesController {
   }
 
   @Get('/')
-  async searchMovieByTitle(@Query('query') title: string): Promise<Movie[]> {
-    return await this.moviesService.searchMovieByTitle(title);
+  async searchMovieByTitle(
+    @Query('query') title: string,
+    @Query('page') page: number,
+  ): Promise<Movie[]> {
+    return await this.moviesService.searchMovieByTitle(title, page);
   }
 
   @Get('/airingtoday')

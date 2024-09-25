@@ -14,7 +14,7 @@ export class MoviesService {
     this.movies.push(movie);
   }
 
-  async findAll(): Promise<Movie[]> {
+  async findAll(page: number, genres: string): Promise<Movie[]> {
     const headers: AxiosRequestConfig = {
       headers: {
         accept: 'application/json',
@@ -26,7 +26,7 @@ export class MoviesService {
       this.httpService
         .get<
           Movie[]
-        >('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc', headers)
+        >('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=' + page + '&sort_by=popularity.desc' + '&with_genres=' + genres, headers)
         .pipe(
           catchError((error: AxiosError) => {
             this.logger.error(error.response.data);
@@ -81,7 +81,7 @@ export class MoviesService {
     return data;
   }
 
-  async searchMovieByTitle(title: string): Promise<Movie[]> {
+  async searchMovieByTitle(title: string, page: number): Promise<Movie[]> {
     const headers: AxiosRequestConfig = {
       headers: {
         accept: 'application/json',
@@ -89,13 +89,11 @@ export class MoviesService {
           'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWE4NWU4ZDUwOTc4YTg2MDZlYjM1OGE3YTliM2NmMiIsIm5iZiI6MTcyNjczMTU1My4yODI4NTIsInN1YiI6IjY2ZWJkMjdlNTE2OGE4OTZlMTFmZGE3MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rsDAd5YKho9klASxGdYJWQxNQKBzCEmyCe9wWoZPkoQ',
       },
     };
-    this.logger.log(title);
-    console.log(title);
     const { data } = await firstValueFrom(
       this.httpService
         .get<
           Movie[]
-        >('https://api.themoviedb.org/3/search/movie?query=' + title, headers)
+        >('https://api.themoviedb.org/3/search/movie?query=' + title + '&page=' + page, headers)
         .pipe(
           catchError((error: AxiosError) => {
             this.logger.error(error.response.data);
@@ -115,8 +113,6 @@ export class MoviesService {
           'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWE4NWU4ZDUwOTc4YTg2MDZlYjM1OGE3YTliM2NmMiIsIm5iZiI6MTcyNjczMTU1My4yODI4NTIsInN1YiI6IjY2ZWJkMjdlNTE2OGE4OTZlMTFmZGE3MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rsDAd5YKho9klASxGdYJWQxNQKBzCEmyCe9wWoZPkoQ',
       },
     };
-    this.logger.log(url);
-    console.log(url);
     const { data } = await firstValueFrom(
       this.httpService.get<any>(url, headers).pipe(
         catchError((error: AxiosError) => {

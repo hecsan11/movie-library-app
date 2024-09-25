@@ -1,8 +1,8 @@
 import { Suspense, lazy} from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
-const Home = lazy(() => import('./components/home/home'));
 const Login = lazy(() => import('./components/login/login'));
+const Home = lazy(() => import('./components/home/home'));
 
 const router = createBrowserRouter([
   {
@@ -27,11 +27,11 @@ const router = createBrowserRouter([
   }
 ]);
 
-const App_Routes = () => {
+const AppRoutes = () => {
 
   return (
     <RouterProvider router={router} />
   );
 };
 
-export default App_Routes;
+export default AppRoutes;

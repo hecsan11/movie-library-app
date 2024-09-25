@@ -19,8 +19,6 @@ export class GenresService {
       },
     };
     const url = 'https://api.themoviedb.org/3/genre/movie/list?language=en';
-    this.logger.log(url);
-    console.log(url);
     const { data } = await firstValueFrom(
       this.httpService.get<Genre[]>(url, headers).pipe(
         catchError((error: AxiosError) => {

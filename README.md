@@ -362,7 +362,6 @@ And in my design´s decision, I decided to populate the UI with a table with the
         <TableRow hover role="checkbox" tabIndex={-1} key={row.original_title}>
             {columns.map((column) => {
             const value = row[column.id];
-            debugger;
             return (
                 <TableCell key={column.id} align={column.align}>
                 {column.format && typeof value === 'number'
