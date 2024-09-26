@@ -26,10 +26,24 @@ Also I have to install @emotion/react @emotion/styled
 If we want to add images to the app, we have to follow the instructions given in https://developer.themoviedb.org/docs/image-basics and specify good sizes of width and height. Most of them are png, jpg, jpegs and other formats , so they can
 have lower qualities when sizes grow. SVG images don´t have those problems of resizing and they will maintain the quality
 
-# Comment way of solving API calls
+# Solving API calls
 
-# Problem with handleSubmit on react hook form
+When I first began to search all the different calls that TMDB´s api, I realized that it was a call for fetching all the movies with different filter such as genres and so on but not for filtering title. You have to call another service if you want to retrieve movies by title but I didn´t found one service where you can search by title and by genres together. 
+I thought of retrieving data for this service https://api.themoviedb.org/3/search/movie?query={your_title} and when I received the response, filtering the results based if the user has introduced genres for searching.
+At the end I developed a solution where if you search by title, data from method service searchMovieByTitle will be given
+and if the user wants to find by genres , data from method service findAll.
+
+One of the improvements that I would have liked to do is that if user searchs by title and genres, the response from searchMovieByTitle will be filtered at the frontend regarding the genres chosen by the user. Now when the user searchs by title, it priorizes the name instead of the genres and if he wants to retrieve all the genres, no title has to be added at the form.
 
 # Typing could be better
 
-# Separate filters work good but when you use both, it priorizes the name
+# Deploying and serving apps with Github pages
+
+# Styling and creating a responsive app
+
+One of the things that I didn´t achieve perfectly and I´m still working on it, it´s the app´s style. I have used 
+nor styled components of Material UI and neither the Material UI library itself , so the app is not responsive and some things can be better designed. The main task was to achieve a correct logic with state management, get all bonus and option tasks possibles although I know that the design part is very important too, but this part can be made along the time.
+
+# Docker image of the app
+
+I couldn´t achieve this for now.

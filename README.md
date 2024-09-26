@@ -4,17 +4,23 @@
 
 At the beginning, I create the server´s backend with Nest.js. I add Nest to my global dependencies through
 
+```c
 npm i -g @nestjs/cli
+```
 
 And then I create the server folder with the help of Nest
 
+```c
 nest new server
+```
 
 Nest creates an app with TS files so we can work with Typescript
 
 Second, I create the frontend folder with this command:
 
+```c
 npx create-react-app frontend --template typescript
+```
 
 When the installation ends, I install some libraries: React Hook Form, MUI styled components, Redux Toolkit and other libraries that I will need for fulfilling the technical challenges to create a movie´s library with filtering tools.
 
@@ -223,6 +229,29 @@ export class MoviesService {
     );
     return data;
   }
+
+  async searchMovieByTitle(title: string, page: number): Promise<Movie[]> {
+    const headers: AxiosRequestConfig = {
+      headers: {
+        accept: 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWE4NWU4ZDUwOTc4YTg2MDZlYjM1OGE3YTliM2NmMiIsIm5iZiI6MTcyNjczMTU1My4yODI4NTIsInN1YiI6IjY2ZWJkMjdlNTE2OGE4OTZlMTFmZGE3MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rsDAd5YKho9klASxGdYJWQxNQKBzCEmyCe9wWoZPkoQ',
+      },
+    };
+    const { data } = await firstValueFrom(
+      this.httpService
+        .get<
+          Movie[]
+        >('https://api.themoviedb.org/3/search/movie?query=' + title + '&page=' + page, headers)
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(error.response.data);
+            throw 'An error happened!';
+          }),
+        ),
+    );
+    return data;
+  }
 }
 
 ```
@@ -350,32 +379,144 @@ And we use it inside our home functional component
 const { data, error, isLoading } = useGetMoviesQuery();
 ```
 
-And in my design´s decision, I decided to populate the UI with a table with the different movies retrieved from the TMDB´s API, my own API and the help of RTK Query Hooks.
+And in my design´s decision, I decided to populate the UI with a table with the different movies retrieved from the TMDB´s API, my own API and the help of RTK Query Hooks. 
 
 ```c
 
-<TableBody>
-    {data?.results
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map((row: any) => {
-        return (
-        <TableRow hover role="checkbox" tabIndex={-1} key={row.original_title}>
-            {columns.map((column) => {
-            const value = row[column.id];
-            return (
-                <TableCell key={column.id} align={column.align}>
-                {column.format && typeof value === 'number'
-                    ? column.format(value)
-                    : null}
-                {typeof value === 'string' && value.match(/\.(jpg|jpeg|png|gif|svg)$/i) ? <img src={'https://image.tmdb.org/t/p/w500${row.poster_path}'} width={200} height={150} alt="" /> : value}
-                </TableCell>
-            );
-            })}
-        </TableRow>
-        );
-    })}
-</TableBody>
+{!isLoading && <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+  <TableContainer sx={{ maxHeight: 'auto' }}>
+      <Table stickyHeader aria-label="sticky table">
+      <TableHead>
+          <TableRow>
+          {columns.map((column) => (
+              <TableCell
+              key={column.id}
+              align={column.align}
+              style={{ minWidth: column.minWidth }}
+              >
+              {column.label}
+              </TableCell>
+          ))}
+          </TableRow>
+      </TableHead>
+      <TableBody>
+          {(totalQuery ?  data : dataQuery)?.results
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((row: any) => {
+              return (
+              <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                  {columns.map((column) => {
+                  let value = row[column.id];
+                  if (typeof value === 'object' && value?.length && value.length > 0){
+                      let genresMovie = '';
+                      value?.forEach((element: any) => {
+                          dataGenres?.genres.forEach((genre: any) => {
+                              if (genre.id === element){
+                                  genresMovie = genresMovie + genre.name + ', ';
+                              }
+                          })
+                      });
+                      value = genresMovie
+                  }
+                  if (column.id === 'release_date'){
+                      value = value.split("-").reverse().join("/");
+                  }
+                  return (
+                      <TableCell key={column.id} align={column.align}>
+                      {column.format && typeof value === 'number'
+                          ? column.format(value)
+                          : null}
+                      {typeof value === 'string' && value.match(/\.(jpg|jpeg|png|gif|svg)$/i) ? <img src={'https://image.tmdb.org/t/p/w500${row.poster_path}'} width={200} height={150} alt="" /> : value}
+                      </TableCell>
+                  );
+                  })}
+              </TableRow>
+              );
+          })}
+      </TableBody>
+      </Table>
+  </TableContainer>
+  <TablePagination
+      rowsPerPageOptions={[10, 25, 100]}
+      component="div"
+      count={(totalQuery ?  data : dataQuery)?.results.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+  />
+}
 ```
+
+Name of the columns headers are recovered and we populate the table with a ternary operator based if we
+recover the data from one service or another (fullQuery state). 
+
+As a I say in the COMMENTS.md section, two services are used where the user can recover different datasets. One is for full queries trying to recover all the movies database with possibility of filtering by genre and the other one is specific one for searching by title.
+
+```c
+(totalQuery ?  data : dataQuery)?.results
+```
+
+When retrieving the data I adjust the values so they can be formatted correctly.
+
+TablePagination provides pagination for the queries but if I wanted to recover more results, I created query parameter "page" so the user can continue seeing movies from the database. For rendering purposes, the service response returns arrays of 20 Movie´s Objects so this additional query param had to be added.
+
+# Creating the react hook form in Home Component
+
+When creating the form, I did it with React Hook Forms but I had several problems when I submitted the form because the page reloaded. When working with React Hook Form, I found out that you don´t need to add event.preventDefault() method to avoid this behaviour but even forcing that behaviour, I didn´t succeed. For that reason, I use getValues to get advantage of all the features included with React Hook Form.
+
+To create a multiple select for external UI library , I had to add Controller tag, so the form control value can be returned for getValues and work with it. Also, I had to create select´s logic based in the array of genres objects with ids and names of the genres.
+
+```c
+  {/* Genres */}
+  <FormControl sx={{ m: 1, width: 300 }}>
+      <FormLabel htmlFor="genres_movie">Genres</FormLabel>
+      <Controller
+      name="genres"
+      control={control}
+      render={({ field }) => (
+          <Select
+          {...field}
+          {...register("genres")}
+          multiple
+          labelId="multiple-checkbox-genres-label"
+          id="genres_movie"
+          value={genreName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((genreId: number) => (
+                  <Chip key={genreId} label={dataGenres?.genres.find((o: any) => o.id === genreId)!.name} />
+                  ))}
+              </Box>
+          )}
+          MenuProps={MenuProps}
+          >
+              {dataGenres?.genres.map((genre: any) => (
+                  <MenuItem key={genre.id} value={genre.id}>
+                      <Checkbox checked={genreName.includes(genre.id)} />
+                      <ListItemText primary={genre.name} />
+                  </MenuItem>
+              ))}
+          </Select>
+      )}
+      />
+```
+
+# Use the app
+
+1) Traditional way
+
+If we want to execute the app without Github Pages, just download the code from https://github.com/hecsan11/movie-library-app, access the /frontend and /server and install the dependencies in each folder respectively (npm install). This task was done with Node 20.13.1 LTS.
+
+After the dependecies are installed, execute frontend and server with npm start. More information about Nest and React can be found in the README files inside each folder.
+
+Finally, when the apps are executing, do a fake login and interact with the searching tool or iterate along the different movies that are storaged in TMDB. Enjoy!
+
+2) Github Pages
+
+# Future of the app, things that can be improved and other topics
 
 
 
