@@ -552,7 +552,7 @@ npm run deploy
 
 The "homepage" option determines the root URL in the final HTML file, and the new scripts handle the build´s files and getting everything over into the new gh-pages branch.
 
-In this situation I deploy my main root app and the gh-pages, but none of them worked. I tried to change the homepage and deploy with different approaches, create and deploy a monorepo branch (just with the frontend code and not the server folder) or other solutions but I always had a 404 error...
+In this situation I deploy my main root app and the gh-pages, but none of them worked. I tried to change the homepage and deploy with different approaches, create and deploy a monorepo branch (just with the frontend code and not the server folder in https://github.com/hecsan11/movie-library-app-just-frontend) or other solutions but I always had a 404 error...
 
 I found and tried many solutions but none of them worked. Some of the things that I tried were:
 
