@@ -559,6 +559,11 @@ I found and tried many solutions but none of them worked. Some of the things tha
 1) I installed Deploy Jekill and commit jekyll-gh-pages.yml to use GitHub actions 
 2) Update my relative links
 3) Updating my React Provider setup
+4) Push the build to github and consume it with 
+```c
+"homepage": "https://hecsan11.github.io/movie-library-app/frontend/build",
+```
+So we acces directyly
 4) Correct vulnerabilites, warnings or bad code logic that can produce this mistake.
 
 So, to use the app, we have to use the traditional way (1) to check the results. API and Token are provided for the services so it can be used without 403´s problems.
