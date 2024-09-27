@@ -168,7 +168,9 @@ For retrieving movies and genres, I needed to create controller and service that
 
 To do it, first I create the controller with this command:
 
+```c
 nest g controller movies
+```
 
 And I create the different routes and HTTP methods that are going to be used with the help of services
 
@@ -193,7 +195,9 @@ export class MoviesController {
 
 To create the movie service, I used this command:
 
+```c
 nest g service movies
+```
 
 And after creating the movies.service.ts, I implemented the REST methods with help of HTTP axios library and the AxiosRequestConfig for creating the headers. The authorization token is needed when we have to call external APIs.
 
@@ -516,7 +520,48 @@ Finally, when the apps are executing, do a fake login and interact with the sear
 
 2) Github Pages
 
-# Future of the app, things that can be improved and other topics
+First of all, we must know that Github Pages only serves static files so we want to deploy a bundle (dist or build) to be served on the Internet. Most of the frontends projects can be dployed in Github Pages. If we want to deploy our server or backendservices, we will need an app such as Heroku or Openshift which they can support server-side logic. I tried to deploy the app in Github pages but after several attempts I couldn´t make it. I´m going to say the steps that I made and at the COMMENTS.md I explain the difficulties that I found.
+
+At the beginning, I had some problems because I didn´t know how to deploy the app and when I did it , the main README outside the app was shown in https://hecsan11.github.io/movie-library-app/ and another README could be found in the folders https://hecsan11.github.io/movie-library-app/frontend and https://hecsan11.github.io/movie-library-app/server but no frontend was working.
+
+Doing some investigation, I found that we can deploy for a branch with /root or /docs folder but none of them worked for me, so I decided to try with the gh-pages tools, so the build created by react, can easily be integrated in GitHub Pages, because gh-pages creates for us, a branch just with the app´s build. We install gh-pages as a dependency;
+
+```c
+npm install --save gh-pages
+````
+
+Second , we create a line in package.json with the tag "homepage" where the folder´s route was found. In my case:
+
+```c
+"homepage": "https://hecsan11.github.io/movie-library-app/frontend",
+```
+
+Because as you can see inside the repo, both the frontend and the backend are together but separated for two different
+folders. We add two more lines in the scripts section:
+
+```c
+"predeploy": "npm run build",
+"deploy": "gh-pages -d build",
+```
+
+And we execute command:
+
+```c
+npm run deploy
+```
+
+The "homepage" option determines the root URL in the final HTML file, and the new scripts handle the build´s files and getting everything over into the new gh-pages branch.
+
+In this situation I deploy my main root app and the gh-pages, but none of them worked. I tried to change the homepage and deploy with different approaches, create and deploy a monorepo branch (just with the frontend code and not the server folder) or other solutions but I always had a 404 error...
+
+I found and tried many solutions but none of them worked. Some of the things that I tried were:
+
+1) I installed Deploy Jekill and commit jekyll-gh-pages.yml to use GitHub actions 
+2) Update my relative links
+3) Updating my React Provider setup
+4) Correct vulnerabilites, warnings or bad code logic that can produce this mistake.
+
+So, to use the app, we have to use the traditional way (1) to check the results. API and Token are provided for the services so it can be used without 403´s problems.
 
 
 

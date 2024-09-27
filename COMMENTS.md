@@ -8,16 +8,23 @@ TOKEN_API: eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWE4NWU4ZDUwOTc4YTg2MDZlYjM1OGE3YTli
 
 I have to do some things to integrate Material UI Styled Components.
 
+```c
 npm install @mui/material @mui/styled-engine-sc styled-components
+```
 
 The main difference between this and the non-TypeScript example is that you need to add the following path config to your tsconfig.json:
 
+```
 "paths": {
   "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
 }
+```
+
 and install @types/styled-components:
 
+```c
 npm install --save-dev @types/styled-components
+```
 
 Also I have to install @emotion/react @emotion/styled
 
@@ -35,15 +42,30 @@ and if the user wants to find by genres , data from method service findAll.
 
 One of the improvements that I would have liked to do is that if user searchs by title and genres, the response from searchMovieByTitle will be filtered at the frontend regarding the genres chosen by the user. Now when the user searchs by title, it priorizes the name instead of the genres and if he wants to retrieve all the genres, no title has to be added at the form.
 
-# Typing could be better
-
 # Deploying and serving apps with Github pages
+
+After all the things that I wrote and tried at the README, I read this possible cause of error too:
+
+Custom Domain and HTTPS: If you're using a custom domain, make sure your DNS settings are correctly configured. Also, note that GitHub Pages enforces HTTPS, so ensure that your app works over HTTPS. Mixed content (HTTP resources on an HTTPS page) can cause issues.
+
+My app has got some vulnerabilities that maybe are interfering with the deployment of the app cause GitHub pages are deployed in HTTPS URL.
 
 # Styling and creating a responsive app
 
 One of the things that I didn´t achieve perfectly and I´m still working on it, it´s the app´s style. I have used 
 nor styled components of Material UI and neither the Material UI library itself , so the app is not responsive and some things can be better designed. The main task was to achieve a correct logic with state management, get all bonus and option tasks possibles although I know that the design part is very important too, but this part can be made along the time.
 
-# Docker image of the app
+# Future of the app, things that can be improved and other topics
 
-I couldn´t achieve this for now.
+  # Typing could be better
+  Some of the types are done with any type. The movie and genre interface can be better typed.
+
+  # Docker image of the app
+
+  I couldn´t achieve this for now.
+
+  # Correting the deployment of the frontend in Github Pages
+
+  # Try to use a server-side container for consuming the services without the need of installing the project locally
+
+  # Use both filters at the same time (Title and Genres filters) 
